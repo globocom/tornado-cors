@@ -3,7 +3,7 @@ Tornado CORS [![Build Status](https://travis-ci.org/globocom/tornado-cors.png?br
 
 Makes it easier to add CORS support do tornado apps.
 
-About Cross Origin Resource Sharing (CORS)
+About Cross-Origin Resource Sharing (CORS)
 ------------------------------------------
 
 - http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
