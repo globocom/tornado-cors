@@ -1,0 +1,8 @@
+language: python
+python:
+  - "2.7"
+install: make setup
+script:  make test
+notifications:
+  email:
+    - guilherme.cirne@corp.globo.com
