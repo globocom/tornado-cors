@@ -29,7 +29,6 @@ setup(
                    'Topic :: Software Development :: Libraries',
     ],
     include_package_data=True,
-    packages = find_packages(exclude=["tests.*", "tests"]),
     py_modules = ['tornado_cors'],
     install_requires=[requirement for requirement in readfile('requirements.txt').split('\n') if requirement],
 )
