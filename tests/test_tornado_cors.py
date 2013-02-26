@@ -15,7 +15,7 @@ class CorsTestCase(AsyncHTTPTestCase):
         
         self.assertNotIn('Access-Control-Allow-Origin', headers)
         self.assertNotIn('Access-Control-Allow-Headers', headers)
-        self.assertNotIn('Access-Control-Allow-Methods', headers)
+        self.assertEqual(headers['Access-Control-Allow-Methods'], 'OPTIONS')
         self.assertEqual(headers['Access-Control-Max-Age'], '86400')
 
     def test_should_return_headers_with_custom_values_in_options_request(self):
@@ -24,7 +24,7 @@ class CorsTestCase(AsyncHTTPTestCase):
 
         self.assertEqual(headers['Access-Control-Allow-Origin'], '*')
         self.assertEqual(headers['Access-Control-Allow-Headers'], 'Content-Type')
-        self.assertEqual(headers['Access-Control-Allow-Methods'], 'POST, PUT, DELETE')
+        self.assertEqual(headers['Access-Control-Allow-Methods'], 'PUT, POST, DELETE, OPTIONS')
         self.assertNotIn('Access-Control-Max-Age', headers)
 
     def test_should_return_origin_header_for_requests_other_than_options(self):
@@ -45,7 +45,15 @@ class CustomValuesHandler(CorsMixin, RequestHandler):
     CORS_HEADERS = 'Content-Type'
     CORS_METHODS = 'POST, PUT, DELETE'
     CORS_MAX_AGE = None
-    
+
     @asynchronous
     def post(self):
+        self.finish()
+
+    @asynchronous
+    def put(self):
+        self.finish()
+
+    @asynchronous
+    def delete(self):
         self.finish()

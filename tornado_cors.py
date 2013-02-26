@@ -16,6 +16,7 @@ class CorsMixin(object):
 
     CORS_ORIGIN = None
     CORS_HEADERS = None
+    CORS_MAX_AGE = 86400
 
     def prepare(self):
         if self.CORS_ORIGIN:
@@ -38,7 +39,7 @@ class CorsMixin(object):
         if self.CORS_HEADERS:
             self.set_header('Access-Control-Allow-Headers', self.CORS_HEADERS)
         self.set_header('Access-Control-Allow-Methods', self._get_methods())
-        max_age = getattr(self, 'CORS_MAX_AGE', 86400)
-        self.set_header('Access-Control-Max-Age', max_age)
+        if self.CORS_MAX_AGE:
+            self.set_header('Access-Control-Max-Age', self.CORS_MAX_AGE)
         self.set_status(204)
         self.finish()
