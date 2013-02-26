@@ -27,9 +27,6 @@ class MyHandler(CorsMixin, RequestHandler):
     # Value for the Access-Control-Allow-Headers header. Default: None (no header)
     CORS_HEADERS = 'Content-Type'
     
-    # Value for the Access-Control-Allow-Methods header. Default: None (no header)
-    CORS_METHODS = 'GET, POST, PUT, DELETE'
-    
     # Value for the Access-Control-Max-Age header. Default: 86400
     CORS_MAX_AGE = 21600
     
