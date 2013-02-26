@@ -7,3 +7,4 @@ script:  make test
 notifications:
   email:
     - guilherme.cirne@corp.globo.com
+    - jcfigueiredo@gmail.com
