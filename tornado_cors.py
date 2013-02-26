@@ -8,7 +8,7 @@ from tornado.web import asynchronous, RequestHandler
 import inspect
 
 def get_class_that_defined_method(meth):
-    for cls in inspect.getmro(meth.im_class):
+    for cls in inspect.getmro(meth.__self__.__class__):
         if meth.__name__ in cls.__dict__: return cls
     return None
 
