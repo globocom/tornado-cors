@@ -7,10 +7,11 @@ import logging
 from tornado.web import asynchronous, RequestHandler
 
 
-def get_class_that_defined_method(meth):
+def _get_class_that_defined_method(meth):
     for cls in inspect.getmro(meth.__self__.__class__):
         if meth.__name__ in cls.__dict__: return cls
     return None
+
 
 class CorsMixin(object):
 
@@ -42,7 +43,7 @@ class CorsMixin(object):
             instance_meth = getattr(self, meth)
             if not meth:
                 continue
-            handler_class = get_class_that_defined_method(instance_meth)
+            handler_class = _get_class_that_defined_method(instance_meth)
             if not handler_class is RequestHandler:
                 methods.append(meth.upper())
 
