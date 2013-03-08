@@ -13,7 +13,9 @@ About Cross-Origin Resource Sharing (CORS)
 Installing
 ----------
 
-`pip install tornado-cors`
+```
+pip install tornado-cors
+```
 
 Using
 -----
