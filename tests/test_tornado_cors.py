@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import imp
 import functools
+import sys
 
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, asynchronous, RequestHandler
@@ -60,19 +61,29 @@ class CustomWrapperTestCase(AsyncHTTPTestCase):
         custom_decorator.wrapper = self.original_wrapper
 
     def test_wrapper_customization(self):
-        # assert default wrapper is being used
-        wrapper_module_name = cors.CorsMixin.options.im_func.func_code.co_filename
-        self.assertFalse(passed_by_custom_wrapper)
-        self.assertTrue(wrapper_module_name.endswith("tornado/web.py"))
+        version = sys.version_info[0]
+        if version == 2:
+            # assert default wrapper is being used        
+            wrapper_module_name = cors.CorsMixin.options.im_func.func_code.co_filename
+            self.assertFalse(passed_by_custom_wrapper)
+            self.assertTrue(wrapper_module_name.endswith("tornado/web.py"))
+
+        self.assertEquals(cors.custom_decorator.wrapper, asynchronous)
 
         # overwrite using custom wrapper and reload module
         custom_decorator.wrapper = custom_wrapper
         imp.reload(cors)
 
-        # assert new wrapper is being used
-        wrapper_module_name = cors.CorsMixin.options.im_func.func_code.co_filename
-        self.assertTrue(passed_by_custom_wrapper)
-        self.assertTrue(wrapper_module_name.endswith("tests/test_tornado_cors.py"))
+        if version == 2:
+            # assert new wrapper is being used
+            wrapper_module_name = cors.CorsMixin.options.im_func.func_code.co_filename
+            self.assertTrue(passed_by_custom_wrapper)
+            self.assertTrue(wrapper_module_name.endswith("tests/test_tornado_cors.py"))
+        
+        self.assertEquals(cors.custom_decorator.wrapper, custom_wrapper)
+
+
+
 
 
 class DefaultValuesHandler(cors.CorsMixin, RequestHandler):
