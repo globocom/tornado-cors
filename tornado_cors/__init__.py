@@ -5,6 +5,7 @@ import inspect
 import logging
 
 from tornado.web import asynchronous, RequestHandler
+from tornado_cors import custom_decorator
 
 
 def _get_class_that_defined_method(meth):
@@ -24,7 +25,7 @@ class CorsMixin(object):
         if self.CORS_ORIGIN:
             self.set_header('Access-Control-Allow-Origin', self.CORS_ORIGIN)
 
-    @asynchronous
+    @custom_decorator.wrapper
     def options(self, *args, **kwargs):
         if self.CORS_HEADERS:
             self.set_header('Access-Control-Allow-Headers', self.CORS_HEADERS)
