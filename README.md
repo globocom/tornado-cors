@@ -44,6 +44,26 @@ class MyHandler(CorsMixin, RequestHandler):
     ...
 ```
 
+Advanced
+--------
+
+By default, CorsMixin defines "options" method using the decorator
+"asynchronous" from "tornado.web".
+
+If your project customizes this decorator for some purpose (eg. usage of
+greenlets), CorsMixin allows such customization in options wrapper.
+
+Usage:
+
+```
+# custom_wrapper was previously defined
+
+from tornado_cors import custom_decorator
+custom_decorator.wrapper = custom_wrapper
+
+```
+
+
 ## License
 
 Tornado CORS is licensed under the MIT License:

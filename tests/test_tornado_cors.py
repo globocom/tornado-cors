@@ -6,7 +6,7 @@ from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, asynchronous, RequestHandler
 
 import tornado_cors as cors
-from tornado_cors import  custom_decorator
+from tornado_cors import custom_decorator
 
 
 passed_by_custom_wrapper = False
