@@ -11,4 +11,4 @@ clean:
 	@find . -name "*.pyc" -delete
 
 test: clean
-	@nosetests tests/
+	nosetests -s --tests=tests/ --with-xunit

@@ -1,10 +1,26 @@
 # -*- coding: utf-8 -*-
-
+import imp
+import functools
+import sys
 
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, asynchronous, RequestHandler
 
-from tornado_cors import CorsMixin
+import tornado_cors as cors
+from tornado_cors import custom_decorator
+
+
+passed_by_custom_wrapper = False
+
+
+def custom_wrapper(method):
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        result = method(self, *args, **kwargs)
+        return result
+    global passed_by_custom_wrapper
+    passed_by_custom_wrapper = id(wrapper)
+    return wrapper
 
 
 class CorsTestCase(AsyncHTTPTestCase):
@@ -12,7 +28,7 @@ class CorsTestCase(AsyncHTTPTestCase):
     def test_should_return_headers_with_default_values_in_options_request(self):
         self.http_client.fetch(self.get_url('/default'), self.stop, method='OPTIONS')
         headers = self.wait().headers
-        
+
         self.assertNotIn('Access-Control-Allow-Origin', headers)
         self.assertNotIn('Access-Control-Allow-Headers', headers)
         self.assertEqual(headers['Access-Control-Allow-Methods'], 'PUT, POST, DELETE, OPTIONS')
@@ -36,7 +52,41 @@ class CorsTestCase(AsyncHTTPTestCase):
         return Application([(r'/default', DefaultValuesHandler), (r'/custom', CustomValuesHandler)])
 
 
-class DefaultValuesHandler(CorsMixin, RequestHandler):
+class CustomWrapperTestCase(AsyncHTTPTestCase):
+
+    def setUp(self):
+        self.original_wrapper = custom_decorator.wrapper
+
+    def tearDown(self):
+        custom_decorator.wrapper = self.original_wrapper
+
+    def test_wrapper_customization(self):
+        version = sys.version_info[0]
+        if version == 2:
+            # assert default wrapper is being used        
+            wrapper_module_name = cors.CorsMixin.options.im_func.func_code.co_filename
+            self.assertFalse(passed_by_custom_wrapper)
+            self.assertTrue(wrapper_module_name.endswith("tornado/web.py"))
+
+        self.assertEquals(cors.custom_decorator.wrapper, asynchronous)
+
+        # overwrite using custom wrapper and reload module
+        custom_decorator.wrapper = custom_wrapper
+        imp.reload(cors)
+
+        if version == 2:
+            # assert new wrapper is being used
+            wrapper_module_name = cors.CorsMixin.options.im_func.func_code.co_filename
+            self.assertTrue(passed_by_custom_wrapper)
+            self.assertTrue(wrapper_module_name.endswith("tests/test_tornado_cors.py"))
+        
+        self.assertEquals(cors.custom_decorator.wrapper, custom_wrapper)
+
+
+
+
+
+class DefaultValuesHandler(cors.CorsMixin, RequestHandler):
 
     @asynchronous
     def post(self):
@@ -50,8 +100,9 @@ class DefaultValuesHandler(CorsMixin, RequestHandler):
     def delete(self):
         self.finish()
 
-class CustomValuesHandler(CorsMixin, RequestHandler):
-    
+
+class CustomValuesHandler(cors.CorsMixin, RequestHandler):
+
     CORS_ORIGIN = '*'
     CORS_HEADERS = 'Content-Type'
     CORS_METHODS = 'POST'

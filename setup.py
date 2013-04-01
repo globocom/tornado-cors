@@ -13,7 +13,7 @@ def readfile(file_name):
 
 setup(
     name='tornado-cors',
-    version='0.2.0',
+    version='0.3.0',
     keywords='tornado cors',
     author='globo.com',
     author_email='guilherme.cirne@corp.globo.com',
