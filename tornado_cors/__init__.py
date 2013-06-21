@@ -39,8 +39,10 @@ class CorsMixin(object):
         self.finish()
 
     def _get_methods(self):
+        supported_methods = [method.lower() for method in self.SUPPORTED_METHODS]
+        #  ['get', 'put', 'post', 'patch', 'delete', 'options']
         methods = []
-        for meth in ['get', 'put', 'post', 'patch', 'delete', 'options']:
+        for meth in supported_methods:
             instance_meth = getattr(self, meth)
             if not meth:
                 continue
