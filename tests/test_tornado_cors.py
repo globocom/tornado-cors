@@ -38,8 +38,6 @@ class CorsTestCase(AsyncHTTPTestCase):
     def test_should_return_headers_with_custom_values_in_options_request(self):
         self.http_client.fetch(self.get_url('/custom'), self.stop, method='OPTIONS')
         headers = self.wait().headers
-        print headers
-
         self.assertEqual(headers['Access-Control-Allow-Origin'], '*')
         self.assertEqual(headers['Access-Control-Allow-Headers'], 'Content-Type')
         self.assertEqual(headers['Access-Control-Allow-Methods'], 'POST')
