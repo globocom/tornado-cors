@@ -19,19 +19,17 @@ class CorsMixin(object):
     CORS_ORIGIN = None
     CORS_HEADERS = None
     CORS_METHODS = None
+    CORS_CREDENTIALS = None
     CORS_MAX_AGE = 86400
 
     def prepare(self):
         if self.CORS_ORIGIN:
             self.set_header('Access-Control-Allow-Origin', self.CORS_ORIGIN)
 
-    # Working with tornado 3
+    # In case user overwrites prepare methods
     def set_default_headers(self):
-      self.set_header("Access-Control-Allow-Origin", self.CORS_ORIGIN)
-      self.set_header("Access-Control-Allow-Methods", self.CORS_METHODS)
-      self.set_header("Access-Control-Allow-Headers", self.CORS_HEADERS)
-      self.set_header('Access-Control-Max-Age', self.CORS_MAX_AGE)
-
+        if self.CORS_ORIGIN:
+            self.set_header("Access-Control-Allow-Origin", self.CORS_ORIGIN)
 
     @custom_decorator.wrapper
     def options(self, *args, **kwargs):
@@ -41,6 +39,9 @@ class CorsMixin(object):
             self.set_header('Access-Control-Allow-Methods', self.CORS_METHODS)
         else:
             self.set_header('Access-Control-Allow-Methods', self._get_methods())
+        if self.CORS_CREDENTIALS != None:
+            self.set_header('Access-Control-Allow-Credentials',
+                "true" if self.CORS_CREDENTIALS else "false")
         if self.CORS_MAX_AGE:
             self.set_header('Access-Control-Max-Age', self.CORS_MAX_AGE)
         self.set_status(204)

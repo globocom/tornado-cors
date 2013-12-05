@@ -35,6 +35,11 @@ class MyHandler(CorsMixin, RequestHandler):
     # Default: Methods defined in handler class.
     # None means no header.
     CORS_METHODS = 'POST'
+
+    # Value for the Access-Control-Allow-Credentials header.
+    # Default: None (no header).
+    # None means no header.
+    CORS_CREDENTIALS = True
     
     # Value for the Access-Control-Max-Age header.
     # Default: 86400.
