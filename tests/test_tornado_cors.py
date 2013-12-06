@@ -31,22 +31,28 @@ class CorsTestCase(AsyncHTTPTestCase):
 
         self.assertNotIn('Access-Control-Allow-Origin', headers)
         self.assertNotIn('Access-Control-Allow-Headers', headers)
+        self.assertNotIn('Access-Control-Allow-Credentials', headers)
         self.assertEqual(headers['Access-Control-Allow-Methods'], 'POST, DELETE, PUT, OPTIONS')
         self.assertEqual(headers['Access-Control-Max-Age'], '86400')
 
     def test_should_return_headers_with_custom_values_in_options_request(self):
         self.http_client.fetch(self.get_url('/custom'), self.stop, method='OPTIONS')
         headers = self.wait().headers
-
         self.assertEqual(headers['Access-Control-Allow-Origin'], '*')
         self.assertEqual(headers['Access-Control-Allow-Headers'], 'Content-Type')
         self.assertEqual(headers['Access-Control-Allow-Methods'], 'POST')
+        self.assertEqual(headers['Access-Control-Allow-Credentials'], 'true')
         self.assertNotIn('Access-Control-Max-Age', headers)
 
     def test_should_return_origin_header_for_requests_other_than_options(self):
         self.http_client.fetch(self.get_url('/custom'), self.stop, method='POST', body='')
         headers = self.wait().headers
         self.assertEqual(headers['Access-Control-Allow-Origin'], '*')
+
+    def test_should_support_custom_methods(self):
+        response = self.http_client.fetch(self.get_url('/custom_method'), self.stop, method='OPTIONS')
+        headers = self.wait().headers
+        self.assertEqual(headers["Access-Control-Allow-Methods"], 'OPTIONS, NEW_METHOD')
 
     def test_should_support_custom_methods(self):
         response = self.http_client.fetch(self.get_url('/custom_method'), self.stop, method='OPTIONS')
@@ -108,6 +114,7 @@ class CustomValuesHandler(cors.CorsMixin, RequestHandler):
     CORS_ORIGIN = '*'
     CORS_HEADERS = 'Content-Type'
     CORS_METHODS = 'POST'
+    CORS_CREDENTIALS = True
     CORS_MAX_AGE = None
 
     @asynchronous
