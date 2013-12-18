@@ -3,7 +3,7 @@
 
 
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 def readfile(file_name):
@@ -13,7 +13,7 @@ def readfile(file_name):
 
 setup(
     name='tornado-cors',
-    version='0.3.2',
+    version='0.4.0',
     keywords='tornado cors',
     author='globo.com',
     author_email='guilherme.cirne@corp.globo.com',
