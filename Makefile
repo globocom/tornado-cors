@@ -3,6 +3,7 @@ help:
 	@echo '    setup_upgrade ........... upgrades project'
 	@echo '    test .................... runs tests'
 	@echo '    clean ................... cleans project'
+	@echo '    release ................. releases project to pypi'
 
 setup:
 	pip install -r requirements.local.txt
@@ -17,3 +18,6 @@ clean:
 
 test: clean
 	nosetests -s --tests=tests/ --with-xunit
+
+release:
+	python setup.py sdist register upload
