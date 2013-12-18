@@ -2,9 +2,8 @@
 
 
 import inspect
-import logging
 
-from tornado.web import asynchronous, RequestHandler
+from tornado.web import RequestHandler
 from tornado_cors import custom_decorator
 
 
@@ -22,11 +21,6 @@ class CorsMixin(object):
     CORS_CREDENTIALS = None
     CORS_MAX_AGE = 86400
 
-    def prepare(self):
-        if self.CORS_ORIGIN:
-            self.set_header('Access-Control-Allow-Origin', self.CORS_ORIGIN)
-
-    # In case user overwrites prepare methods
     def set_default_headers(self):
         if self.CORS_ORIGIN:
             self.set_header("Access-Control-Allow-Origin", self.CORS_ORIGIN)
