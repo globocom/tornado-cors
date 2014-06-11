@@ -21,6 +21,9 @@ Using
 -----
 
 ```
+from tornado_cors import CorsMixin
+
+
 class MyHandler(CorsMixin, RequestHandler):
     
     # Value for the Access-Control-Allow-Origin header.
