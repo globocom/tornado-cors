@@ -48,6 +48,10 @@ class MyHandler(CorsMixin, RequestHandler):
     # Default: 86400.
     # None means no header.
     CORS_MAX_AGE = 21600
+
+    # Value for the Access-Control-Expose-Headers header.
+    # Default: None
+    CORS_EXPOSE_HEADERS = 'Location, X-WP-TotalPages'
     
     ...
 ```
