@@ -14,6 +14,7 @@ def readfile(file_name):
 setup(
     name='tornado-cors',
     version='0.5.0',
+    description='CORS support for Tornado',
     keywords='tornado cors',
     author='globo.com',
     author_email='guilherme.cirne@corp.globo.com',
