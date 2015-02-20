@@ -20,10 +20,14 @@ class CorsMixin(object):
     CORS_METHODS = None
     CORS_CREDENTIALS = None
     CORS_MAX_AGE = 86400
+    CORS_EXPOSE_HEADERS = None
 
     def set_default_headers(self):
         if self.CORS_ORIGIN:
             self.set_header("Access-Control-Allow-Origin", self.CORS_ORIGIN)
+
+        if self.CORS_EXPOSE_HEADERS:
+            self.set_header('Access-Control-Expose-Headers', self.CORS_EXPOSE_HEADERS)
 
     @custom_decorator.wrapper
     def options(self, *args, **kwargs):
@@ -38,6 +42,10 @@ class CorsMixin(object):
                 "true" if self.CORS_CREDENTIALS else "false")
         if self.CORS_MAX_AGE:
             self.set_header('Access-Control-Max-Age', self.CORS_MAX_AGE)
+
+        if self.CORS_EXPOSE_HEADERS:
+            self.set_header('Access-Control-Expose-Headers', self.CORS_EXPOSE_HEADERS)
+
         self.set_status(204)
         self.finish()
 
