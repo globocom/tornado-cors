@@ -46,7 +46,7 @@ class CorsTestCase(AsyncHTTPTestCase):
         self.assertEqual(headers['Access-Control-Expose-Headers'], 'Location')
         self.assertNotIn('Access-Control-Max-Age', headers)
 
-    def test_should_return_origin_header_for_requests_other_than_options(self):
+    def test_should_return_headers_for_requests_other_than_options(self):
         self.http_client.fetch(self.get_url('/custom'), self.stop, method='POST', body='')
         headers = self.wait().headers
         self.assertEqual(headers['Access-Control-Allow-Origin'], '*')
