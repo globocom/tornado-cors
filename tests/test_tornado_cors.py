@@ -53,7 +53,7 @@ class CorsTestCase(AsyncHTTPTestCase):
         self.assertEqual(headers['Access-Control-Expose-Headers'], 'Location')
 
     def test_should_support_custom_methods(self):
-        response = self.http_client.fetch(self.get_url('/custom_method'), self.stop, method='OPTIONS')
+        self.http_client.fetch(self.get_url('/custom_method'), self.stop, method='OPTIONS')
         headers = self.wait().headers
         self.assertEqual(headers["Access-Control-Allow-Methods"], 'OPTIONS, NEW_METHOD')
 
